@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/core/common/logo.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
+import 'package:fooddeliveryapp/features/on_boarding/views/widgets/page1.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -15,7 +16,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     super.initState();
     Future.delayed(Duration(seconds: 3)).then((value) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Placeholder()));
+          context, MaterialPageRoute(builder: (context) => FirstPage()));
     });
   }
 

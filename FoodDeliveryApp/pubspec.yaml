@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^5.1.0
   flutter_screenutil: ^5.8.4
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset:  assets/fonts/Poppins-light.ttf
+    - family: Nunito
+      fonts:
+        - asset:  assets/fonts/Nunito-Bold.ttf
   assets:
     - assets/images/
 

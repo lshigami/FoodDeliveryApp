@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fooddeliveryapp/core/res/image_res.dart';
 import 'package:fooddeliveryapp/features/on_boarding/views/on_boarding_screen.dart';
 
 void main() {
