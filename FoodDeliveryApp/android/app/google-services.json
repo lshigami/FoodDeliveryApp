@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "819148988617",
+    "project_id": "testfirestore-b7869",
+    "storage_bucket": "testfirestore-b7869.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819148988617:android:41b98352aa4287980a6d18",
+        "android_client_info": {
+          "package_name": "com.example.ishi.fooddeliveryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYURbP4HhjEnVG65nWAkqVJ5RNjQDs6_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819148988617:android:cf307a73e4fdccd60a6d18",
+        "android_client_info": {
+          "package_name": "com.example.testfirestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYURbP4HhjEnVG65nWAkqVJ5RNjQDs6_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
