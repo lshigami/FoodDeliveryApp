@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/core/Common/Authentication.dart';
 import 'package:fooddeliveryapp/core/Common/listpage1.dart';
+import 'package:fooddeliveryapp/core/Screen/BookMark.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
 import 'package:image_picker/image_picker.dart';
@@ -155,76 +156,90 @@ class _Screen_UserState extends State<Screen_User> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 90,
-                  height: 65,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.bookmark_outline_outlined),
-                      Text("Bookmarks")
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8,right: 4),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>BookMarks()));
+                  },
                   child: Container(
                     width: 90,
                     height: 65,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.notifications_outlined),
-                        Text("Notifications")
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4,right: 8),
-                  child: Container(
-                    width: 90,
-                    height: 65,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.settings_outlined),
-                        Text("Settings")
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 90,
-                  height: 65,
-                  decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.bookmark_outline_outlined),
+                        Text("Bookmarks")
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.payment_rounded),
-                      Text("Payments")
-                    ],
+                ), // BOOKMARK
+                InkWell(
+                  onTap: (){},
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8,right: 4),
+                    child: Container(
+                      width: 90,
+                      height: 65,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.notifications_outlined),
+                          Text("Notifications")
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ), // NOTIFICATION
+                InkWell(
+                  onTap: (){},
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4,right: 8),
+                    child: Container(
+                      width: 90,
+                      height: 65,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.settings_outlined),
+                          Text("Settings")
+                        ],
+                      ),
+                    ),
+                  ),
+                ), // SETTING
+                InkWell(
+                  onTap: (){},
+                  child: Container(
+                    width: 90,
+                    height: 65,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.payment_rounded),
+                        Text("Payments")
+                      ],
+                    ),
+                  ),
+                ), // PAYMENT
               ],
             ), //
           ), //4 icon

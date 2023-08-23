@@ -40,7 +40,9 @@ class AuthController extends GetxController{
           'Name':'Noname',
           'Email':email,
           'Phone':'Nophone',
-          'Image':"https://firebasestorage.googleapis.com/v0/b/testfirestore-b7869.appspot.com/o/avatar%2Favtapp.png?alt=media&token=b7008aa8-c566-448d-9023-06f58dc872dd"
+          'Image':"https://firebasestorage.googleapis.com/v0/b/testfirestore-b7869.appspot.com/o/avatar%2Favtapp.png?alt=media&token=b7008aa8-c566-448d-9023-06f58dc872dd",
+          'Total':0.0,
+          'Cart':[],
         });
 
       }catch(e){

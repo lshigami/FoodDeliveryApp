@@ -49,6 +49,7 @@
     firebase_storage: ^11.2.6
     coupon_uikit: ^0.2.0
     http: ^1.1.0
+    flutter_animated_button: ^2.0.3
 
   dev_dependencies:
     flutter_test:

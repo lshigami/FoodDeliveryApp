@@ -1,11 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooddeliveryapp/core/Common/listpage1.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 
 import '../model/ModelDetail.dart';
+
 
 
 class CardofFood extends StatefulWidget {
@@ -14,6 +20,8 @@ class CardofFood extends StatefulWidget {
   String restaurant;
   int id;
   String cost;
+
+
   CardofFood({super.key,required this.urlImage,required this.name,required this.restaurant,required this.id,required this.cost});
 
   @override
@@ -23,14 +31,64 @@ class CardofFood extends StatefulWidget {
 class _CardofFoodState extends State<CardofFood> {
   late FoodData foodData;
   String dropdownValue1='S';
-  String dropdownValue2='Red';
-
   bool loading = true;
+
+
+  RxInt counter=1.obs;
+
+  final CollectionReference _user = FirebaseFirestore.instance.collection('Users');
+  final String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<void> _create(int counter,String size) async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Products').where('Name', isEqualTo: widget.name).get();
+    String idProduct = querySnapshot.docs.first.id;
+    DocumentSnapshot userSnapshot = await _user.doc(uid).get();
+    Map<String, dynamic> userData = userSnapshot.data()! as Map<String, dynamic>;
+    List<dynamic> cart = userData['Cart'] ?? [];
+    int productIndex = cart.indexWhere((item) => item[item.keys.elementAt(0)] == idProduct);
+    if (productIndex != -1) {
+      cart[productIndex]['Quantity'] += counter;
+    } else {
+      cart.add({'Quantity': counter,'Uid':idProduct,'Size':size});
+    }
+    await _user.doc(uid).update({'Cart': cart});
+    await _user.doc(uid).update({'Total':FieldValue.increment(counter*double.parse(widget.cost))});
+  }
+
+  Future<void>_addBookMarks()async{
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Products').where('Name', isEqualTo: widget.name).get();
+    String idProduct = querySnapshot.docs.first.id;
+    _user.doc(uid).update({'Marked':FieldValue.arrayUnion([idProduct])});
+  }
+
+  Future<void> _removeBookMarks() async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Products').where('Name', isEqualTo: widget.name).get();
+    String idProduct = querySnapshot.docs.first.id;
+    _user.doc(uid).update({
+      'Marked': FieldValue.arrayRemove([idProduct])
+    });
+  }
+  Future<void> checkIsBookmarked() async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Products').where('Name', isEqualTo: widget.name).get();
+    String idProduct = querySnapshot.docs.first.id;
+    DocumentSnapshot userDoc = await _user.doc(uid).get();
+    if (userDoc.exists && userDoc['Marked'] != null) {
+      List<dynamic> bookmarkSaved = userDoc['Marked'];
+      isBookmarked.value = bookmarkSaved.contains(idProduct);
+    } else {
+      isBookmarked.value = false;
+    }
+  }
+
+
   @override
   void initState() {
     fetchData();
+    checkIsBookmarked();
     super.initState();
   }
+
+  RxBool isBookmarked = false.obs;
 
   Future<void> fetchData() async {
     var url = Uri.parse(
@@ -163,8 +221,48 @@ class _CardofFoodState extends State<CardofFood> {
                   ),
                 )), // TAG name
             Positioned(
-                 top: h*1/3-20,left: 330,
-                child: Image(image: AssetImage('assets/images/heart.png'),)
+                 top: h*1/3-30,left: 330,
+                child:Obx(
+                  ()=>InkWell(
+                    onTap: (){
+                      if (isBookmarked.value) {
+                        // Xóa khỏi bookmark
+                        _removeBookMarks();
+                        isBookmarked.value = false;
+                      } else {
+                        _addBookMarks();
+                        isBookmarked.value = true;
+                      }
+                    },
+                    child: (isBookmarked==true) ? Container(
+                      width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: CupertinoColors.systemPink,
+                            width: 3
+                          )
+                        ),
+                        child: Center(child: Icon(CupertinoIcons.heart_fill,color: CupertinoColors.systemPink,size: 30,))
+                    )
+                        : Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: CupertinoColors.black,
+                                width: 3
+                            )
+                        ),
+                        child: Center(child: Icon(Icons.heart_broken_sharp,color: Colors.black,size: 30,))
+                    )
+                  ),
+                ),
+
             ), // heart
             Positioned(
               top: h*1/3+50,left: 30,right: 30,
@@ -283,7 +381,13 @@ class _CardofFoodState extends State<CardofFood> {
                   ),
                   Positioned(
                     right: 59,top: 15,
-                      child: Image(image: AssetImage('assets/images/giohang.png'))
+                      child: InkWell(
+                        onTap: (){
+                          _create(counter.value,dropdownValue1);
+                          Get.snackbar('Product Added', "You Have Added The ${widget.name} To The Cart",snackPosition: SnackPosition.TOP,duration: Duration(seconds: 2));
+                        },
+                          child: Image(image: AssetImage('assets/images/giohang.png'))
+                      )
                   ),
                   Positioned(
                     left: 30,top: 15,
@@ -305,9 +409,15 @@ class _CardofFoodState extends State<CardofFood> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('-',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro ),),
-                            Text('1',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro )),
-                            Text('+',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro ))
+                            InkWell(
+                                onTap:(){if(counter.value>1) counter.value--; } ,
+                                child: Text('-',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro ),)
+                            ),
+                            Obx(()=>Text("${counter}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro ))),
+                            InkWell(
+                                onTap: (){counter.value++;},
+                                child: Text('+',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro ))
+                            )
                           ],
                         ),
                       ),
