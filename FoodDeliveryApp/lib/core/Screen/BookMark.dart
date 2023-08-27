@@ -35,7 +35,6 @@ class _BookMarksState extends State<BookMarks> {
     }
   }
   late RxBool IsEmpty =true.obs;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +97,16 @@ class WhenHasData extends StatefulWidget {
 class _WhenHasDataState extends State<WhenHasData> {
   final CollectionReference _user = FirebaseFirestore.instance.collection('Users');
   final String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<void> _removeBookMarks(String name) async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Products').where('Name', isEqualTo: name).get();
+    String idProduct = querySnapshot.docs.first.id;
+    _user.doc(uid).update({
+      'Marked': FieldValue.arrayRemove([idProduct])
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -141,9 +150,12 @@ class _WhenHasDataState extends State<WhenHasData> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 10,right: 5),
                                     child: Container(
-                                      width: 220,
+                                      width: 180,
                                         child: Text(productData['Name'],style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,)),
-                                  )
+                                  ),
+                                  InkWell(onTap: (){
+                                    _removeBookMarks(productData['Name']);
+                                  },child: Icon(Icons.remove_circle_rounded,color: Colors.pinkAccent,size: 25,))
                                 ],
                               ),
                             ),

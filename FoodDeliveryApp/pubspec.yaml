@@ -50,6 +50,9 @@
     coupon_uikit: ^0.2.0
     http: ^1.1.0
     flutter_animated_button: ^2.0.3
+    intl: ^0.18.1
+    flutter_local_notifications: ^15.1.1
+    firebase_messaging: ^14.6.7
 
   dev_dependencies:
     flutter_test:

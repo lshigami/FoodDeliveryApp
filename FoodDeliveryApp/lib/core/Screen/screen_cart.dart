@@ -6,23 +6,59 @@ import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
 import 'package:get/get.dart';
 import 'package:fooddeliveryapp/core/Common/SightOfFood.dart';
+import 'package:intl/intl.dart';
 
-class Screen_Cart extends StatelessWidget {
+class Screen_Cart extends StatefulWidget {
   int NumberofItem;
   Screen_Cart({super.key,required this.NumberofItem});
 
   @override
-  Widget build(BuildContext context) {
+  State<Screen_Cart> createState() => _Screen_CartState();
+}
 
-    final CollectionReference _user = FirebaseFirestore.instance.collection('Users');
-    final String uid = FirebaseAuth.instance.currentUser!.uid;
-    RxInt amount=0.obs;
-    Rx<double> totalcost =0.0.obs;
+class _Screen_CartState extends State<Screen_Cart> {
 
-    Future<void> _update(double cost)async {
-      await _user.doc(uid).update({'Total':FieldValue.increment(cost)});
+  late RxBool IsEmpty =true.obs;
+  Future<void> IsCartEmpty() async {
+    DocumentSnapshot userDoc = await _user.doc(uid).get();
+    List<dynamic> cart = userDoc['Cart'];
+    if (cart.isEmpty){
+      IsEmpty.value=true;
+      deliveryCost.value=0;
+      print("true");
     }
+    else {
+      IsEmpty.value=false;
+      deliveryCost.value=5;
+      print("false");
+    }
+  }
+  RxInt deliveryCost =0.obs;
 
+  @override
+  void initState() {
+    IsCartEmpty();
+    super.initState();
+  }
+
+  final CollectionReference _user = FirebaseFirestore.instance.collection('Users');
+  final String uid = FirebaseAuth.instance.currentUser!.uid;
+  RxInt amount=0.obs;
+  Rx<double> totalcost =0.0.obs;
+  Future<void> _update(double cost)async {
+    await _user.doc(uid).update({'Total':FieldValue.increment(cost)});
+  }
+  Future<void> clearCart() async {
+    await _user.doc(uid).update({'Cart': []});
+    await _user.doc(uid).update({'Total': 0});
+  }
+  Future<void> clearCost() async {
+    await _user.doc(uid).update({'Total': 0});
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Your Order",style: TextStyle(color: Colors.black,fontFamily: Fonts.Cera,fontSize: 25),),
@@ -40,7 +76,6 @@ class Screen_Cart extends StatelessWidget {
         stream: _user.doc(uid).snapshots(),
         builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot>snapshot){
           if(snapshot.hasData){
-
             double myValue = 1.0*(snapshot.data!['Total']);
             RxDouble myObservableValue = myValue.obs;
             totalcost=myObservableValue;
@@ -120,7 +155,6 @@ class Screen_Cart extends StatelessWidget {
                 Container(
                   child: ListView.builder(
                     shrinkWrap: true,
-
                     itemCount: cart.length ,
                     itemBuilder: (context,index){
                       final item = cart[index];
@@ -188,6 +222,9 @@ class Screen_Cart extends StatelessWidget {
                                                       break;
                                                     }
                                                   }
+                                                  setState(() {
+                                                    IsCartEmpty();
+                                                  });
                                                 },
                                                   child: Text('-',style: TextStyle(color: Color(0xFFF8774A),fontWeight: FontWeight.bold,fontSize:21,fontFamily: Fonts.Metro ),)
                                               ),
@@ -301,16 +338,18 @@ class Screen_Cart extends StatelessWidget {
 
                               ],
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("${totalcost} \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
-                                Text("5 \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
-                                Text("0 \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold,color: Colors.green),),
-                                Text("${totalcost+5} \$",style: TextStyle(fontSize: 20,fontFamily: Fonts.Avenir,fontWeight: FontWeight.bold,color: Colours.lightOrboldOrangeTextangeText),),
+                            Obx(()
+                              => Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("${totalcost} \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
+                                  Text("${deliveryCost.value} \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
+                                  Text("0 \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold,color: Colors.green),),
+                                  Text("${totalcost+deliveryCost.value} \$",style: TextStyle(fontSize: 20,fontFamily: Fonts.Avenir,fontWeight: FontWeight.bold,color: Colours.lightOrboldOrangeTextangeText),),
 
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -326,12 +365,32 @@ class Screen_Cart extends StatelessWidget {
                         color: Colours.lightOrboldOrangeTextangeText,
                         borderRadius: BorderRadius.circular(30)
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("PAYMENT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: Fonts.Poppins,fontSize: 20),),
-                        Icon(Icons.arrow_forward_outlined,color: Colors.white,size: 28,)
-                      ],
+                    child: InkWell(
+                      onTap: (){
+                        print('history');
+                        DateTime now = DateTime.now();
+                        String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+                        if(IsEmpty==false) {
+                          _user.doc(uid).update({
+                            'History': FieldValue.arrayUnion([{'cart': cart,
+                              'time':formattedDate,
+                              'total':totalcost.toString(),
+                            }])
+                          });
+                          clearCart();
+                          clearCost();
+                          setState(() {
+                            IsCartEmpty();
+                          });
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("PAYMENT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: Fonts.Poppins,fontSize: 20),),
+                          Icon(Icons.arrow_forward_outlined,color: Colors.white,size: 28,)
+                        ],
+                      ),
                     ),
                   ),
                 )

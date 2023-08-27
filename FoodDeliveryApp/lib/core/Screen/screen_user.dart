@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/core/Common/Authentication.dart';
 import 'package:fooddeliveryapp/core/Common/listpage1.dart';
 import 'package:fooddeliveryapp/core/Screen/BookMark.dart';
+import 'package:fooddeliveryapp/core/Screen/BoxNotification.dart';
+import 'package:fooddeliveryapp/core/Screen/History.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
 import 'package:image_picker/image_picker.dart';
@@ -178,7 +180,9 @@ class _Screen_UserState extends State<Screen_User> {
                   ),
                 ), // BOOKMARK
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>BoxNoti()));
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8,right: 4),
                     child: Container(
@@ -258,7 +262,9 @@ class _Screen_UserState extends State<Screen_User> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Your Order",style: TextStyle(fontSize: 20,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
-                    Icon(Icons.arrow_forward_ios,size: 19,)
+                    InkWell(onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>History()));
+                    },child: Icon(Icons.arrow_forward_ios,size: 19,))
                   ],
                 ),
               ),
@@ -285,27 +291,27 @@ class _Screen_UserState extends State<Screen_User> {
               ),
             ),
           ), // Feedback
-          Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20,bottom: 15),
-            child: Container(
-              width: 365,
-              height: 60,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15,right: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("My Preferences",style: TextStyle(fontSize: 20,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
-                    Icon(Icons.arrow_forward_ios,size: 19,)
-                  ],
-                ),
-              ),
-            ),
-          ), // Mypreferences
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 20,right: 20,bottom: 15),
+          //   child: Container(
+          //     width: 365,
+          //     height: 60,
+          //     decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(15)
+          //     ),
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(left: 15,right: 15),
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text("My Preferences",style: TextStyle(fontSize: 20,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
+          //           Icon(Icons.arrow_forward_ios,size: 19,)
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ), // Mypreferences
           Padding(
             padding: const EdgeInsets.only(left: 20,right: 20),
             child: Container(

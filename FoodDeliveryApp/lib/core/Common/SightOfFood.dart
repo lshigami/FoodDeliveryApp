@@ -384,7 +384,7 @@ class _CardofFoodState extends State<CardofFood> {
                       child: InkWell(
                         onTap: (){
                           _create(counter.value,dropdownValue1);
-                          Get.snackbar('Product Added', "You Have Added The ${widget.name} To The Cart",snackPosition: SnackPosition.TOP,duration: Duration(seconds: 2));
+                          Get.snackbar('Product Added', "You Have Added The ${widget.name} To The Cart",snackPosition: SnackPosition.TOP,duration: Duration(seconds: 1));
                         },
                           child: Image(image: AssetImage('assets/images/giohang.png'))
                       )
