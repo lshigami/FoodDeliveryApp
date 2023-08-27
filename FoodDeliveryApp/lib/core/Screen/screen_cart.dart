@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fooddeliveryapp/core/res/colours.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
@@ -17,7 +18,7 @@ class Screen_Cart extends StatefulWidget {
 }
 
 class _Screen_CartState extends State<Screen_Cart> {
-
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   late RxBool IsEmpty =true.obs;
   Future<void> IsCartEmpty() async {
     DocumentSnapshot userDoc = await _user.doc(uid).get();
@@ -38,6 +39,7 @@ class _Screen_CartState extends State<Screen_Cart> {
   @override
   void initState() {
     IsCartEmpty();
+    Noti.initialize(flutterLocalNotificationsPlugin);
     super.initState();
   }
 
@@ -382,6 +384,7 @@ class _Screen_CartState extends State<Screen_Cart> {
                           setState(() {
                             IsCartEmpty();
                           });
+                          Noti.showBigTextNotification(title: "Successfully paiding for the order", body: "Thank you for trusting us with your purchase", fln: flutterLocalNotificationsPlugin);
                         }
                       },
                       child: Row(
@@ -402,4 +405,30 @@ class _Screen_CartState extends State<Screen_Cart> {
       )
     );
   }
+}
+
+class Noti{
+  static Future initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    var androidInitialize = new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationsSettings = new InitializationSettings(android: androidInitialize);
+    await flutterLocalNotificationsPlugin.initialize(initializationsSettings );
+  }
+
+  static Future showBigTextNotification({var id =0,required String title, required String body,
+    var payload, required FlutterLocalNotificationsPlugin fln
+  } ) async {
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+    new AndroidNotificationDetails(
+      'you_can_name_it_whatever1',
+      'channel_name',
+
+      playSound: true,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    var not= NotificationDetails(android: androidPlatformChannelSpecifics);
+    await fln.show(0, title, body,not );
+  }
+
 }
