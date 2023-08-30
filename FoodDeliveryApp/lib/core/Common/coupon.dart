@@ -3,10 +3,11 @@ import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
 
 class HorizontalCouponExample1 extends StatelessWidget {
+  String code;
   String content;
   String valid_date;
   String ?url;
-  HorizontalCouponExample1({Key? key,required this.content,required this.valid_date,this.url}) : super(key: key);
+  HorizontalCouponExample1({Key? key,required this.code,required this.content,required this.valid_date,this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fooddeliveryapp/core/res/colours.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
 import 'package:get/get.dart';
 import 'package:fooddeliveryapp/core/Common/SightOfFood.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 class Screen_Cart extends StatefulWidget {
   int NumberofItem;
   Screen_Cart({super.key,required this.NumberofItem});
@@ -18,8 +21,68 @@ class Screen_Cart extends StatefulWidget {
 }
 
 class _Screen_CartState extends State<Screen_Cart> {
+  Map<String,dynamic>?paymentIntent;
+  void makePayment(List<dynamic>cart, String formattedDate, double cost_must_pay)async{
+    try {
+      print('success');
+      paymentIntent=await createPaymentIntent(cost_must_pay);
+      var gpay =PaymentSheetGooglePay(merchantCountryCode: 'US',currencyCode: 'USD',testEnv: true);
+      await Stripe.instance.initPaymentSheet(paymentSheetParameters: SetupPaymentSheetParameters(
+        paymentIntentClientSecret: paymentIntent!['client_secret'],
+        style: ThemeMode.dark,
+        merchantDisplayName: '...',
+        googlePay: gpay,
+      ));
+      displayPaymentSheet(cart,formattedDate);
+    }
+    catch(e){
+      print('failed');
+    }
+  }
+  void displayPaymentSheet(List<dynamic>cart,String formattedDate)async{
+    try{
+      await Stripe.instance.presentPaymentSheet();
+      print("payment successfully");
+      _user.doc(uid).update({
+        'History': FieldValue.arrayUnion([{'cart': cart,
+          'time':formattedDate,
+          'total':(totalcost.value+deliveryCost.value-vouchercost.value*totalcost.value).toString(),
+        }])
+      });
+      clearCart();
+      clearCost();
+      setState(() {
+        IsCartEmpty();
+      });
+      _controller.text='';
+      Noti.showBigTextNotification(title: "Successfully paiding for the order", body: "Thank you for trusting us with your purchase", fln: flutterLocalNotificationsPlugin);
+    }
+    catch(e){
+      print("FAILED");
+    }
+  }
+  createPaymentIntent(double cost_must_pay)async{
+    try{
+      int a=cost_must_pay.round()*100;
+      Map<String,dynamic>body={
+        'amount':'${a}',
+        'currency':'USD',
+      };
+      http.Response response = await http.post(Uri.parse("https://api.stripe.com/v1/payment_intents"),
+          body: body,
+          headers: {
+            'Authorization':'Bearer sk_test_51NkejVKW8wbu5khDWk4eo4VtX3EWsruTNd5HyAVMHRDLaCrSIOxFrYbGGRHKZvmMoQvNjr9kMNbaFg7xsfILyeHA00OzjbCX6n',
+            'Content-Type':'application/x-www-form-urlencoded',
+          }
+      );
+      return json.decode(response.body);
+    }catch(e){
+      throw Exception(e.toString());
+    }
+  }
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   late RxBool IsEmpty =true.obs;
+
   Future<void> IsCartEmpty() async {
     DocumentSnapshot userDoc = await _user.doc(uid).get();
     List<dynamic> cart = userDoc['Cart'];
@@ -52,11 +115,30 @@ class _Screen_CartState extends State<Screen_Cart> {
   }
   Future<void> clearCart() async {
     await _user.doc(uid).update({'Cart': []});
-    await _user.doc(uid).update({'Total': 0});
   }
   Future<void> clearCost() async {
     await _user.doc(uid).update({'Total': 0});
   }
+
+  RxDouble vouchercost =0.0.obs;
+  RxDouble Discounted=0.0.obs;
+  Future<double> ValidVoucherInCost(String voucher,double totalfirst) async {
+    final CollectionReference _vouchers = FirebaseFirestore.instance.collection('Vouchers');
+    final DocumentSnapshot snapshot = await _vouchers.doc('InCost').get();
+    final Map<String, dynamic> voucherdata = snapshot.data() as Map<String, dynamic>;
+    final List<dynamic> tickets = voucherdata['Voucher'];
+    double voucherExists = -1.0;
+    print("IN Function");
+    for (final item in tickets) {
+      if (item['Code'] == voucher && item['Condition']*1.0<=totalfirst) {
+        print("CONDITION :: ${item['Condition']}");
+        voucherExists = item['Deal']*1.0;
+        break;
+      }
+    }
+    return voucherExists;
+  }
+  final TextEditingController _controller = TextEditingController();
 
 
   @override
@@ -153,7 +235,7 @@ class _Screen_CartState extends State<Screen_Cart> {
                       ),
                     ),
                   ),
-                ),
+                ), // information
                 Container(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -283,6 +365,7 @@ class _Screen_CartState extends State<Screen_Cart> {
                             ]
                         ),
                         child: TextField(
+                          controller: _controller,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(
@@ -297,19 +380,34 @@ class _Screen_CartState extends State<Screen_Cart> {
                       ),
                       Positioned(
                         right: 0,
-                        child: Container(
-                          width: 100,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(90),
-                              color: Color(0xffF8774A)
+                        child: InkWell(
+                          onTap: ()async{
+                            final String voucher = _controller.text;
+                            print("DAY NE : ${_controller.text}");
+                            final double result = await ValidVoucherInCost(voucher, totalcost.value);
+                            if (result == -1.0) {
+                              vouchercost.value = 0.0;
+                              Get.snackbar('Apply Voucher', "Failed",snackPosition: SnackPosition.TOP,duration: Duration(seconds: 1),colorText: Colors.red);
+                            } else {
+                              vouchercost.value = result;
+                              print("APP MA : ${vouchercost.value}");
+                              Get.snackbar('Apply Voucher', "Success",snackPosition: SnackPosition.TOP,duration: Duration(seconds: 1),colorText: Colors.green);
+                            }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(90),
+                                color: Color(0xffF8774A)
+                            ),
+                            child: Center(child: Text("Apply",style: TextStyle(color: Colors.white,fontSize:14,fontWeight: FontWeight.bold,fontFamily: Fonts.Poppins ),)),
                           ),
-                          child: Center(child: Text("Apply",style: TextStyle(color: Colors.white,fontSize:14,fontWeight: FontWeight.bold,fontFamily: Fonts.Poppins ),)),
                         ),
                       ),
                     ],
                   ),
-                ),
+                ),// promocode
                 Padding(
                   padding: const EdgeInsets.only(left: 15,right: 15),
                   child: Container(
@@ -347,8 +445,8 @@ class _Screen_CartState extends State<Screen_Cart> {
                                 children: [
                                   Text("${totalcost} \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
                                   Text("${deliveryCost.value} \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold),),
-                                  Text("0 \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold,color: Colors.green),),
-                                  Text("${totalcost+deliveryCost.value} \$",style: TextStyle(fontSize: 20,fontFamily: Fonts.Avenir,fontWeight: FontWeight.bold,color: Colours.lightOrboldOrangeTextangeText),),
+                                  Text("${vouchercost.value*totalcost.value} \$",style: TextStyle(fontSize: 16,fontFamily: Fonts.Poppins,fontWeight: FontWeight.bold,color: Colors.green),),
+                                  Text("${totalcost.value+deliveryCost.value-vouchercost.value*totalcost.value} \$",style: TextStyle(fontSize: 20,fontFamily: Fonts.Avenir,fontWeight: FontWeight.bold,color: Colours.lightOrboldOrangeTextangeText),),
 
                                 ],
                               ),
@@ -357,7 +455,7 @@ class _Screen_CartState extends State<Screen_Cart> {
                         ),
                       )
                   ),
-                ),
+                ), // tablecost
                 Padding(
                   padding: const EdgeInsets.only(left: 50,right: 50,top: 20),
                   child: Container(
@@ -373,18 +471,7 @@ class _Screen_CartState extends State<Screen_Cart> {
                         DateTime now = DateTime.now();
                         String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
                         if(IsEmpty==false) {
-                          _user.doc(uid).update({
-                            'History': FieldValue.arrayUnion([{'cart': cart,
-                              'time':formattedDate,
-                              'total':totalcost.toString(),
-                            }])
-                          });
-                          clearCart();
-                          clearCost();
-                          setState(() {
-                            IsCartEmpty();
-                          });
-                          Noti.showBigTextNotification(title: "Successfully paiding for the order", body: "Thank you for trusting us with your purchase", fln: flutterLocalNotificationsPlugin);
+                          makePayment(cart,formattedDate,(totalcost.value+deliveryCost.value-vouchercost.value*totalcost.value)*1.0);
                         }
                       },
                       child: Row(
@@ -396,7 +483,7 @@ class _Screen_CartState extends State<Screen_Cart> {
                       ),
                     ),
                   ),
-                )
+                ) // button
               ],
             );
           }

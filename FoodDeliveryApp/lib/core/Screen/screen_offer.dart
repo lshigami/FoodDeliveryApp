@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/core/Common/coupon.dart';
+import 'package:fooddeliveryapp/core/Screen/CouponCard.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 
 class Screen_Offer extends StatelessWidget {
@@ -11,26 +14,67 @@ class Screen_Offer extends StatelessWidget {
     String pepsi= 'assets/images/pepsi.jpg';
     String coca= 'assets/images/coca.png';
     String momo= 'assets/images/momo.jpg';
-
+    final CollectionReference _vouchers = FirebaseFirestore.instance.collection('Vouchers');
     return  Container(
       color: Color(0xFFF5F5F8),
-
       child: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(child: Text("Some Coupons For Only You",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: Fonts.Poppins,color: Color(0xFF0B666A)),)),
+          StreamBuilder(
+              stream: _vouchers.doc('InCost').snapshots(),
+              builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot>snapshot){
+                if(snapshot.hasData){
+                  final Map<String, dynamic> voucherdata = snapshot.data!.data() as Map<String, dynamic>;
+                  List<dynamic> tickets = voucherdata['Voucher'];
+                  return Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: tickets.length,
+                      itemBuilder: (context,index){
+                        final item = tickets[index];
+                        final String code = item['Code'];
+                        final String content = item['Content'];
+                        final String valid = item['Valid'];
+                        return InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CouponCard(code: code, title: content, valid: valid)));
+                            },
+                            child: HorizontalCouponExample1(code: code, content: content, valid_date: valid));
+                      },
+                    ),
+                  );
+                }
+                else return CircularProgressIndicator();
+              }
           ),
-          HorizontalCouponExample1(content: 'Sale 50% for bill from 30\$', valid_date: 'Valid : 30/9/2023',),
-          HorizontalCouponExample1(content: 'Sale 20% for bill from 15\$', valid_date: 'Valid : 30/9/2023'),
-          HorizontalCouponExample1(content: 'Free delivery for bill from 10\$', valid_date: 'Valid : 30/9/2023',url: ship,),
-          HorizontalCouponExample1(content: 'Free delivery for bill near 5 km', valid_date: 'Valid : 30/9/2023',url: ship,),
-          HorizontalCouponExample1(content: 'Pepsi treats you up to 2\$', valid_date: 'Valid : 30/9/2023',url: pepsi,),
-          HorizontalCouponExample1(content: 'Coca treats you up to 2\$', valid_date: 'Valid : 30/9/2023',url: coca,),
-          HorizontalCouponExample1(content: 'Momo pay treats you up to 80% ', valid_date: 'Valid : 30/9/2023',url: momo,),
-
+          StreamBuilder(
+              stream: _vouchers.doc('InShip').snapshots(),
+              builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot>snapshot){
+                if(snapshot.hasData){
+                  final Map<String, dynamic> voucherdata = snapshot.data!.data() as Map<String, dynamic>;
+                  List<dynamic> tickets = voucherdata['Voucher'];
+                  return Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: tickets.length,
+                      itemBuilder: (context,index){
+                        final item = tickets[index];
+                        final String code = item['Code'];
+                        final String content = item['Content'];
+                        final String valid = item['Valid'];
+                        return InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CouponCard(code: code, title: content, valid: valid)));
+                            },
+                            child: HorizontalCouponExample1(code: code, content: content, valid_date: valid,url: ship,));
+                      },
+                    ),
+                  );
+                }
+                else return CircularProgressIndicator();
+              }
+          ),
         ],
-      ),
+      )
     );
   }
 }

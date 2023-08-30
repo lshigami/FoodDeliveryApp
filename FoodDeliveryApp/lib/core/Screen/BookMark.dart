@@ -118,7 +118,6 @@ class _WhenHasDataState extends State<WhenHasData> {
             return Container(
               child: ListView.builder(
                 shrinkWrap: true,
-
                 itemCount: bookmarkSaved.length,
                 itemBuilder: (context,index){
                   final item = bookmarkSaved[index];
