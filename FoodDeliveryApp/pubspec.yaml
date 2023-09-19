@@ -54,6 +54,12 @@
     flutter_local_notifications: ^15.1.1
     firebase_messaging: ^14.6.7
     flutter_stripe: ^9.3.0
+    mapbox_gl: ^0.16.0
+    flutter_dotenv: ^5.1.0
+    location: ^5.0.3
+    flutter_typeahead: ^4.6.2
+    flutter_credit_card: ^3.0.7
+    awesome_card: ^1.1.7
 
   dev_dependencies:
     flutter_test:
@@ -98,6 +104,7 @@
           - asset:  assets/fonts/Cera_Pro.otf
     assets:
       - assets/images/
+      - assets/.env
 
     # To add assets to your application, add an assets section, like this:
     # assets:

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:fooddeliveryapp/core/Screen/ChooseMap.dart';
 import 'package:fooddeliveryapp/core/res/colours.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
@@ -203,7 +204,11 @@ class _Screen_CartState extends State<Screen_Cart> {
                                     ),
                                   ],
                                 ),
-                                Text("Edit Address",style: TextStyle(fontSize: 13,fontFamily: Fonts.Cera,fontWeight: FontWeight.bold)),
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AddressMapBox()));
+                                  },
+                                    child: Text("Edit Address",style: TextStyle(fontSize: 13,fontFamily: Fonts.Cera,fontWeight: FontWeight.bold))),
                               ],
                             ),
                             Row(

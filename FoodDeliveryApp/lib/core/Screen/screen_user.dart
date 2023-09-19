@@ -9,6 +9,7 @@ import 'package:fooddeliveryapp/core/Common/listpage1.dart';
 import 'package:fooddeliveryapp/core/Screen/BookMark.dart';
 import 'package:fooddeliveryapp/core/Screen/BoxNotification.dart';
 import 'package:fooddeliveryapp/core/Screen/History.dart';
+import 'package:fooddeliveryapp/core/Screen/YourCard.dart';
 import 'package:fooddeliveryapp/core/res/fonts.dart';
 import 'package:fooddeliveryapp/core/res/image_res.dart';
 import 'package:image_picker/image_picker.dart';
@@ -234,13 +235,18 @@ class _Screen_UserState extends State<Screen_User> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20)
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.payment_rounded),
-                        Text("Payments")
-                      ],
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>CreditCardScreen(cardNumber: "1111 2222 3333 4444", expiryDate: '111 ', cardHolderName: 'quang', cvvCode: '12345')));
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.payment_rounded),
+                          Text("Payments")
+                        ],
+                      ),
                     ),
                   ),
                 ), // PAYMENT
