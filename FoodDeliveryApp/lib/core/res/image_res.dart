@@ -30,5 +30,7 @@ class ImageRes {
   static const seticon = '$_imageBase/settingicon.png';
   static const payicon = '$_imageBase/paymenticon.png';
   static const notiicon = '$_imageBase/notifiicon.png';
-
+  static const res = '$_imageBase/restaurant.png';
+  static const menu = '$_imageBase/menu.png';
+  static const order = '$_imageBase/order.png';
 }

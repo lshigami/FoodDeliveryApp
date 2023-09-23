@@ -102,6 +102,9 @@
       - family: Cera
         fonts:
           - asset:  assets/fonts/Cera_Pro.otf
+      - family: Restaurant
+        fonts:
+          - asset:  assets/fonts/RestaurantFont.ttf
     assets:
       - assets/images/
       - assets/.env

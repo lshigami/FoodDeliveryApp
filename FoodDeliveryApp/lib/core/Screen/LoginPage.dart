@@ -326,5 +326,3 @@ class _PageAndForgotPassWordState extends State<PageAndForgotPassWord> {
     );
   }
 }
-
-

@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/core/Common/Authentication.dart';
 import 'package:fooddeliveryapp/core/Common/listpage1.dart';
+import 'package:fooddeliveryapp/core/Screen/AdminPanel.dart';
 import 'package:fooddeliveryapp/core/Screen/BookMark.dart';
 import 'package:fooddeliveryapp/core/Screen/BoxNotification.dart';
 import 'package:fooddeliveryapp/core/Screen/History.dart';
@@ -64,7 +65,6 @@ class _Screen_UserState extends State<Screen_User> {
                _emailcontrol.text=documentSnapshot?['Email'];
                _numberphonecontrol.text=documentSnapshot?['Phone'];
                Navigator.of(context).pop();
-
              }, child: Text("SAVE CHANGE")
              )
 
@@ -208,20 +208,25 @@ class _Screen_UserState extends State<Screen_User> {
                   onTap: (){},
                   child: Padding(
                     padding: const EdgeInsets.only(left: 4,right: 8),
-                    child: Container(
-                      width: 90,
-                      height: 65,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.settings_outlined),
-                          Text("Settings")
-                        ],
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Admin()));
+                      },
+                      child: Container(
+                        width: 90,
+                        height: 65,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.admin_panel_settings),
+                            Text("Admin")
+                          ],
+                        ),
                       ),
                     ),
                   ),

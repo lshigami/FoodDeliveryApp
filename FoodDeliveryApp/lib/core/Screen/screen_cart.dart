@@ -263,7 +263,8 @@ class _Screen_CartState extends State<Screen_Cart> {
                               final String nameRestaurant = productData['Restaurant'];
                               double cost = (productData['Cost'] * item['Quantity']).toDouble();
                               return  Padding(
-                                padding: const EdgeInsets.only(left: 15,right: 15,top: 15),
+                                padding: const EdgeInsets.only(
+                                  left: 15,top: 15),
                                 child: Row(
                                   children: [
                                     ClipRRect(
