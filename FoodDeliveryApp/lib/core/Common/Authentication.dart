@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/core/Screen/HomeScreen.dart';
-import 'package:fooddeliveryapp/core/Screen/LoginPage.dart';
 import 'package:fooddeliveryapp/core/Screen/Page01.dart';
 import 'package:get/get.dart';
 
@@ -72,5 +71,3 @@ class AuthController extends GetxController{
     await auth.signOut();
   }
 }
-
-

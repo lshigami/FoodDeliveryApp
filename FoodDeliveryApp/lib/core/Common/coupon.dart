@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
-import 'package:fooddeliveryapp/core/res/image_res.dart';
 
+// ignore: must_be_immutable
 class HorizontalCouponExample1 extends StatelessWidget {
   String code;
   String content;

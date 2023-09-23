@@ -29,6 +29,49 @@
             {
               "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "819148988617-6as4egmqh2mnsukrdoq4b4o86en708t6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ishi.fooddeliveryapp.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819148988617:android:7295821ec57564b30a6d18",
+        "android_client_info": {
+          "package_name": "com.example.testauthentication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYURbP4HhjEnVG65nWAkqVJ5RNjQDs6_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "819148988617-6as4egmqh2mnsukrdoq4b4o86en708t6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ishi.fooddeliveryapp.RunnerTests"
+              }
             }
           ]
         }
@@ -58,6 +101,13 @@
             {
               "client_id": "819148988617-j6b63ttska02vvn7i5uvuko6rsc4813d.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "819148988617-6as4egmqh2mnsukrdoq4b4o86en708t6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ishi.fooddeliveryapp.RunnerTests"
+              }
             }
           ]
         }

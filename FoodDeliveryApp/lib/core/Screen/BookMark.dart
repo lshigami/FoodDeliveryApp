@@ -67,7 +67,7 @@ class WhenDoesntHasData extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("Nothing yet ... ",style: TextStyle(color: Colours.fieldText,fontSize: 20,fontFamily: Fonts.Nunito),),
-          Text("Add your favorite food places",style: TextStyle(color: Colours.fieldText,fontSize: 20,fontFamily: Fonts.Nunito)),
+          Text("Add your favorite food",style: TextStyle(color: Colours.fieldText,fontSize: 20,fontFamily: Fonts.Nunito)),
           RawMaterialButton(
             onPressed: () {},
             elevation: 2.0,
@@ -80,7 +80,7 @@ class WhenDoesntHasData extends StatelessWidget {
             padding: EdgeInsets.all(10.0),
             shape: CircleBorder(),
           ),
-          Text("Add Places",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: Fonts.Nunito,fontWeight: FontWeight.bold)),
+          Text("Add Food",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: Fonts.Nunito,fontWeight: FontWeight.bold)),
           Image(image: AssetImage(ImageRes.line))
         ],
       ),
@@ -172,4 +172,3 @@ class _WhenHasDataState extends State<WhenHasData> {
     );
   }
 }
-

@@ -221,7 +221,8 @@ class _CardofFoodState extends State<CardofFood> {
                   ),
                 )), // TAG name
             Positioned(
-                 top: h*1/3-30,left: 330,
+                 top: h*1/3-30,
+                 right: 40,
                 child:Obx(
                   ()=>InkWell(
                     onTap: (){
@@ -332,7 +333,9 @@ class _CardofFoodState extends State<CardofFood> {
               ),
             ),
             Positioned(
-              top: h-280,left: MediaQuery.sizeOf(context).width/4-10,right:  MediaQuery.sizeOf(context).width/4-10,
+              top: h-h/2.5,
+              left: MediaQuery.sizeOf(context).width/4-10,
+              // right:  MediaQuery.sizeOf(context).width/4-10,
                 child: Row(
                   children: [
                     Padding(
@@ -356,7 +359,7 @@ class _CardofFoodState extends State<CardofFood> {
                 )
             ),
             Positioned(
-              top: h-90,
+              bottom: 10,
               left: 30,
               right: 30,
               child: Stack(
@@ -369,7 +372,7 @@ class _CardofFoodState extends State<CardofFood> {
                     ),
                   ),
                   Positioned(
-                    right: 50,top: 11,bottom: 11,
+                    right: 17,top: 11,bottom: 11,
                     child: Container(
                       width: 40,
                       height: 40,
@@ -380,7 +383,7 @@ class _CardofFoodState extends State<CardofFood> {
                     ),
                   ),
                   Positioned(
-                    right: 59,top: 15,
+                    right: 25,top: 15,
                       child: InkWell(
                         onTap: (){
                           _create(counter.value,dropdownValue1);
@@ -428,8 +431,8 @@ class _CardofFoodState extends State<CardofFood> {
               ),
             ),
             Positioned(
-             top: h-230,
-              left: 30,
+             top: h-h/3,
+              left: MediaQuery.of(context).size.width/8,
               width: 290,
               height: 35,
               child: Container(
@@ -469,12 +472,12 @@ class _CardofFoodState extends State<CardofFood> {
               ),
             ),
             Positioned(
-              top: h-190,
+              top: h-h/3.5,
               left: 20,
               child: Text("Addtions",style: TextStyle(color: Color(0xFF5E5959),fontFamily: Fonts.Poppins,fontSize: 19,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic)),
             ),
             Positioned(
-              bottom: 95,
+              bottom: h/11,
               left: 30,
               right: 30,
               child: Container(
@@ -489,7 +492,7 @@ class _CardofFoodState extends State<CardofFood> {
               ),
             ),
             Positioned(
-              bottom: 95,
+              bottom: h/11,
               width: 360,
               height: 40,
               child: Padding(
