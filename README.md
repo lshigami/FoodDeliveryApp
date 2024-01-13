@@ -20,6 +20,5 @@ This application offers the following features:
 ## Installation
 To install the application, follow these steps:
 1. Clone this repo.
-2. Flutter..
 
 Good luck!
