@@ -7,5 +7,5 @@ class Fonts {
   static const Metro = 'Metro';
   static const Avenir = 'Avenir';
   static const Cera = 'Cera';
-
+  static const Restaurant = 'Restaurant';
 }

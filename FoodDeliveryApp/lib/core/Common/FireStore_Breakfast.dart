@@ -184,6 +184,7 @@ class _BreakfastState extends State<Breakfast> {
 
 
 
+// ignore: must_be_immutable
 class TicketSale extends StatelessWidget {
   String percent;
   TicketSale({super.key,required this.percent});
